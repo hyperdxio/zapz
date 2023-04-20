@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dougEfresh/logzio-go"
+	"github.com/hyperdxio/hyperdx-go"
 	"github.com/magiconair/properties/assert"
 	"go.uber.org/zap/zapcore"
 )
@@ -36,7 +36,7 @@ func TestNew(t *testing.T) {
 	}))
 	ts.Start()
 	defer ts.Close()
-	logz, _ := logzio.New("fake", logzio.SetUrl(ts.URL))
+	logz, _ := hyperdx.New("fake", hyperdx.SetUrl(ts.URL))
 	z, _ := New("fake", SetLogz(logz))
 
 	z.Info("test")
@@ -64,7 +64,7 @@ func TestLevel(t *testing.T) {
 	}))
 	ts.Start()
 	defer ts.Close()
-	logz, _ := logzio.New("fake", logzio.SetUrl(ts.URL))
+	logz, _ := hyperdx.New("fake", hyperdx.SetUrl(ts.URL))
 	z, _ := New("fake", SetLogz(logz), SetLevel(zapcore.DebugLevel))
 
 	z.Debug("test")
@@ -92,7 +92,7 @@ func TestType(t *testing.T) {
 	}))
 	ts.Start()
 	defer ts.Close()
-	logz, _ := logzio.New("fake", logzio.SetUrl(ts.URL))
+	logz, _ := hyperdx.New("fake", hyperdx.SetUrl(ts.URL))
 	z, _ := New("fake", SetLogz(logz), SetLevel(zapcore.DebugLevel), SetType("tester"))
 
 	z.Debug("test")
@@ -123,7 +123,7 @@ func TestConfig(t *testing.T) {
 	}))
 	ts.Start()
 	defer ts.Close()
-	logz, _ := logzio.New("fake", logzio.SetUrl(ts.URL))
+	logz, _ := hyperdx.New("fake", hyperdx.SetUrl(ts.URL))
 	z, _ := New("fake", SetLogz(logz), SetEncodeConfig(cfg))
 
 	z.Info("test")
@@ -168,7 +168,7 @@ func TestDebug(t *testing.T) {
 	var d = &debugWriter{
 		dbg: make([]byte, 1024),
 	}
-	logz, _ := logzio.New("fake", logzio.SetUrl(ts.URL))
+	logz, _ := hyperdx.New("fake", hyperdx.SetUrl(ts.URL))
 	z, _ := New("fake", SetLogz(logz), WithDebug(d), SetLevel(zapcore.DebugLevel), SetType("tester"))
 
 	z.Debug("test")

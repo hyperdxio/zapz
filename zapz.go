@@ -20,7 +20,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/dougEfresh/logzio-go"
+	"github.com/hyperdxio/hyperdx-go"
 	"go.uber.org/zap"
 )
 
@@ -29,7 +29,7 @@ func LogzTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.UTC().Format(time.RFC3339Nano))
 }
 
-// DefaultConfig - Message needs to be the message key for logzio
+// DefaultConfig - Message needs to be the message key for hyperdx
 var DefaultConfig = zapcore.EncoderConfig{
 	TimeKey:        "ts",
 	LevelKey:       "level",
@@ -48,7 +48,7 @@ const defaultType = "zap-logger"
 
 // Zapz struct for logging
 type Zapz struct {
-	lz    *logzio.LogzioSender
+	lz    *hyperdx.HyperdxSender
 	level zapcore.Level
 	enCfg zapcore.EncoderConfig
 	typ   string
@@ -56,7 +56,7 @@ type Zapz struct {
 
 // New will create a zap logger compatible with logz
 func New(token string, opts ...Option) (*zap.Logger, error) {
-	logz, err := logzio.New(token)
+	logz, err := hyperdx.New(token)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func New(token string, opts ...Option) (*zap.Logger, error) {
 }
 
 // NewLogz will create a zap logger compatible with logz
-func NewLogz(logz *logzio.LogzioSender, opts ...Option) (*zap.Logger, error) {
+func NewLogz(logz *hyperdx.HyperdxSender, opts ...Option) (*zap.Logger, error) {
 	z := &Zapz{
 		lz:    logz,
 		level: zap.InfoLevel,
@@ -102,7 +102,7 @@ func SetEncodeConfig(c zapcore.EncoderConfig) Option {
 }
 
 // SetLogz use this logzsender
-func SetLogz(c *logzio.LogzioSender) Option {
+func SetLogz(c *hyperdx.HyperdxSender) Option {
 	return optionFunc(func(z *Zapz) {
 		z.lz = c
 	})
@@ -118,7 +118,7 @@ func SetType(ty string) Option {
 // WithDebug enables debugging output for log
 func WithDebug(w io.Writer) Option {
 	return optionFunc(func(z *Zapz) {
-		logzio.SetDebug(w)(z.lz)
+		hyperdx.SetDebug(w)(z.lz)
 	})
 }
 
