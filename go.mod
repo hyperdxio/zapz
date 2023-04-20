@@ -1,4 +1,4 @@
-module github.com/dougEfresh/zapz
+module github.com/hyperdxio/zapz
 
 go 1.12
 

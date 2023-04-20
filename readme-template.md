@@ -15,7 +15,7 @@ package main
 import (
   "os"
 
-  "github.com/dougEfresh/zapz"
+  "github.com/hyperdxio/zapz"
     )
 
 func main() {
