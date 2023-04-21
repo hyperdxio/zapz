@@ -74,7 +74,7 @@ type Option interface {
 }
 
 // Helper to hook with otel trace
-func withTraceMetadata(ctx context.Context, logger *zap.Logger) *zap.Logger {
+func WithTraceMetadata(ctx context.Context, logger *zap.Logger) *zap.Logger {
 	spanContext := trace.SpanContextFromContext(ctx)
 	if !spanContext.IsValid() {
 		// ctx does not contain a valid span.
