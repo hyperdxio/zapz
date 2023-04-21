@@ -108,6 +108,12 @@ func SetLogz(c *hyperdx.HyperdxSender) Option {
 	})
 }
 
+func SetUrl(url string) Option {
+  return optionFunc(func(z *Zapz) {
+    hyperdx.SetUrl(url)(z.lz)
+  })
+}
+
 // SetType setting log type zap.Field
 func SetType(ty string) Option {
 	return optionFunc(func(z *Zapz) {
