@@ -3,7 +3,7 @@ module github.com/hyperdxio/zapz
 go 1.20
 
 require (
-	github.com/hyperdxio/hyperdx-go v0.0.0-20230420222154-e4f932dcfb68
+	github.com/hyperdxio/hyperdx-go v1.2.0
 	github.com/magiconair/properties v1.8.7
 	go.uber.org/zap v1.24.0
 )
