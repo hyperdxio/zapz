@@ -66,7 +66,13 @@ func NewLogz(logz *hyperdx.HyperdxSender, opts ...Option) (*zap.Logger, error) {
 
 	en := zapcore.NewJSONEncoder(z.enCfg)
 	hostname, _ := os.Hostname()
-	return zap.New(zapcore.NewCore(en, z.lz, z.level)).With(
+
+	senderCore := zapcore.NewCore(en, z.lz, z.level)
+	consoleCore := zapcore.NewCore(en, zapcore.Lock(os.Stdout), z.level)
+
+	teeCore := zapcore.NewTee(senderCore, consoleCore)
+
+	return zap.New(teeCore, zap.AddCaller()).With(
 		zap.String("type", z.typ),
 		zap.String("__hdx_sv", os.Getenv("OTEL_SERVICE_NAME")),
 		zap.String("__hdx_h", hostname),
