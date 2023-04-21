@@ -65,7 +65,12 @@ func NewLogz(logz *hyperdx.HyperdxSender, opts ...Option) (*zap.Logger, error) {
 	}
 
 	en := zapcore.NewJSONEncoder(z.enCfg)
-	return zap.New(zapcore.NewCore(en, z.lz, z.level)).With(zap.String("type", z.typ)), nil
+	hostname, _ := os.Hostname()
+	return zap.New(zapcore.NewCore(en, z.lz, z.level)).With(
+		zap.String("type", z.typ),
+		zap.String("__hdx_sv", os.Getenv("OTEL_SERVICE_NAME")),
+		zap.String("__hdx_h", hostname),
+	), nil
 }
 
 // An Option configures a Logger.
@@ -85,7 +90,6 @@ func WithTraceMetadata(ctx context.Context, logger *zap.Logger) *zap.Logger {
 		zap.String("trace_id", spanContext.TraceID().String()),
 		zap.String("span_id", spanContext.SpanID().String()),
 		zap.String("trace_flags", spanContext.TraceFlags().String()),
-		zap.String("__hdx_sv", os.Getenv("OTEL_SERVICE_NAME")),
 	)
 }
 
