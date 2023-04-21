@@ -10,9 +10,9 @@ require (
 
 require (
 	github.com/beeker1121/goque v2.1.0+incompatible // indirect
-	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
+	github.com/golang/snappy v0.0.4 // indirect
 	github.com/ricochet2200/go-disk-usage/du v0.0.0-20210707232629-ac9918953285 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
 )
