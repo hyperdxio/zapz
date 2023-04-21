@@ -1,13 +1,15 @@
 package zapz
 
 import (
-	"go.uber.org/zap/zapcore"
-
+	"context"
 	"io"
+	"os"
 	"time"
 
 	"github.com/hyperdxio/hyperdx-go"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // LogzTimeEncoder format to time.RFC3339Nano
@@ -40,7 +42,6 @@ type Zapz struct {
 	typ   string
 }
 
-// New will create a zap logger compatible with logz
 func New(token string, opts ...Option) (*zap.Logger, error) {
 	logz, err := hyperdx.New(token)
 	if err != nil {
@@ -49,7 +50,6 @@ func New(token string, opts ...Option) (*zap.Logger, error) {
 	return NewLogz(logz, opts...)
 }
 
-// NewLogz will create a zap logger compatible with logz
 func NewLogz(logz *hyperdx.HyperdxSender, opts ...Option) (*zap.Logger, error) {
 	z := &Zapz{
 		lz:    logz,
@@ -71,6 +71,22 @@ func NewLogz(logz *hyperdx.HyperdxSender, opts ...Option) (*zap.Logger, error) {
 // An Option configures a Logger.
 type Option interface {
 	apply(z *Zapz)
+}
+
+// Helper to hook with otel trace
+func withTraceMetadata(ctx context.Context, logger *zap.Logger) *zap.Logger {
+	spanContext := trace.SpanContextFromContext(ctx)
+	if !spanContext.IsValid() {
+		// ctx does not contain a valid span.
+		// There is no trace metadata to add.
+		return logger
+	}
+	return logger.With(
+		zap.String("trace_id", spanContext.TraceID().String()),
+		zap.String("span_id", spanContext.SpanID().String()),
+		zap.String("trace_flags", spanContext.TraceFlags().String()),
+		zap.String("__hdx_sv", os.Getenv("OTEL_SERVICE_NAME")),
+	)
 }
 
 // SetLevel set the log level
